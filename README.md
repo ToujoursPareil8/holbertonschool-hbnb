@@ -60,7 +60,6 @@ Design Decisions: The Facade Pattern decouples the API from internal business ru
 <img width="4235" height="5420" alt="Christmas Shopping Decision-2026-02-13-094341" src="https://github.com/user-attachments/assets/af749bab-1346-49aa-923a-aa0665d24891" />
 
 This section details the static structure of the domain model.
-Extrait de code
 
 
 Explanatory Notes
