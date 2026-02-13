@@ -12,7 +12,7 @@ Technical Design Document: HBnB Evolution
 - [How to Use](#how-to-use)
 - [Tool Used](#Tool-used)
 - [Author](#author)
-- [License](#license)
+
 
 ---
 
@@ -25,8 +25,22 @@ Purpose and Scope
 This document serves as the primary technical blueprint. Its goal is to guide the implementation phase by providing a clear representation of the system architecture, defining structural boundaries, core domain entities, and the dynamic flow of data for key operations.
 
 ---
+## Diagram Legend 
+
+| Symbol                    | Meaning                                                                    |
+|---------------------------|----------------------------------------------------------------------------|
+| Actor                     | External entity (e.g., user) that interacts with the system.               |
+| `->`                      | Synchronous message or method call.                                        |
+| `-->`                     | Asynchronous message.                                                      |
+| `-->>` or dashed arrow    | Return message or response.                                                |
+| `alt` / `opt` / `loop`    | Control blocks: alternative, optional, or loop.                            |
+| `activate` / `deactivate` | Object's activation bar (lifeline emphasis).                               |
+| Lifeline (vertical line)  | Represents the lifespan of a participant during the interaction.           |
+
+---
 
 ## High-Level Package Diagram
+<img width="7222" height="5045" alt="hbnb_hlp_v2" src="https://github.com/user-attachments/assets/48c0da62-cdc9-41d6-937d-4d8fcc4ef007" />
 
 The HBnB application utilizes a Three-Layer Architecture integrated with the Facade Design Pattern.
 Extrait de code
@@ -42,6 +56,7 @@ Design Decisions: The Facade Pattern decouples the API from internal business ru
 ---
 
 ## Business Logic Layer
+<img width="4292" height="5482" alt="hbnb_Business_logic" src="https://github.com/user-attachments/assets/99c374a5-05df-46ed-8e9d-e8ed9409bd51" />
 
 This section details the static structure of the domain model.
 Extrait de code
@@ -57,22 +72,28 @@ Utility Services: SocialMediaService is a stateless utility designed to format U
 
 ## API Interaction Flow
 I. User Registration
+<img width="6427" height="4405" alt="sequence_user_registration" src="https://github.com/user-attachments/assets/04380ae7-aa31-4d47-80a7-ceb8eb29ed23" />
 
----
+
 
 II. Place Creation
+<img width="6277" height="4395" alt="sequence_placeCreation" src="https://github.com/user-attachments/assets/150a7fec-d0bd-44a6-ac9b-10d9c80f8f17" />
 
----
+
+
 
 III. Review Submission
+<img width="6242" height="3940" alt="sequence_reviewSubmissions" src="https://github.com/user-attachments/assets/00a87930-e8b1-4c22-b3ef-4357fdfbc465" />
 
----
+
 
 IV. Fetching a List of Places
+<img width="7107" height="4350" alt="sequence_fetchingList" src="https://github.com/user-attachments/assets/1de9e980-b197-4a7c-9acf-e8827cf421a4" />
 
----
+
 
 V. Social Media Sharing
+<img width="8192" height="3551" alt="sequence_SocialMediaSharing" src="https://github.com/user-attachments/assets/16b47d17-83c6-40d7-aeb3-a0f025d1f423" />
 
 ---
 
