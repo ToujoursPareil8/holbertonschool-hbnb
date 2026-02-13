@@ -4,13 +4,11 @@ Technical Design Document: HBnB Evolution
 
 - [Introduction](#introduction)
 - [High-Level Package Diagram](#high-level-package-diagram)
-- [Class Diagram for Business Logic Layer](#class-diagram-for-business-logic-layer)
 - [Diagram Legend](#Diagram-Legend)
+- [Class Diagram for Business Logic Layer](#class-diagram-for-business-logic-layer)
 - [Sequence Diagrams for API Calls](#sequence-diagrams-for-api-calls)
 - [Legend - UML Sequence Diagram](#Legend-UML-Sequence-Diagram)
-- [HBNB Project - Technical Documentation](#HBNB-Project-Technical-Documentation)
 - [How to Use](#how-to-use)
-- [Tool Used](#Tool-used)
 - [Author](#author)
 
 
