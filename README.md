@@ -27,15 +27,17 @@ This document serves as the primary technical blueprint. Its goal is to guide th
 ---
 ## Diagram Legend 
 
-| Symbol                    | Meaning                                                                    |
-|---------------------------|----------------------------------------------------------------------------|
-| Actor                     | External entity (e.g., user) that interacts with the system.               |
-| `->`                      | Synchronous message or method call.                                        |
-| `-->`                     | Asynchronous message.                                                      |
-| `-->>` or dashed arrow    | Return message or response.                                                |
-| `alt` / `opt` / `loop`    | Control blocks: alternative, optional, or loop.                            |
-| `activate` / `deactivate` | Object's activation bar (lifeline emphasis).                               |
-| Lifeline (vertical line)  | Represents the lifespan of a participant during the interaction.           |
+| Symbol / Notation        | Description                                                                                |
+|--------------------------|--------------------------------------------------------------------------------------------|
+| `1 → *`                  | One-to-Many relationship (e.g., one `User` owns many `Places`).                            |
+| `* → *`                  | Many-to-Many relationship (e.g., a `Place` offers multiple `Amenities`, and vice versa).   |
+| `1 → 1`                  | One-to-One relationship.                                                                   |
+| `0 → 1`                  | Optional relationship (zero or one).                                                       |
+| `0 → *`                  | Optional One-to-Many (e.g., an entity may have zero or more related items).                |
+| ➝ (Solid Arrow)          | Association (basic link between classes).                                                  |
+| ◆ (Empty Diamond)        | Aggregation (shared ownership; lifetime of contained object is independent).               |
+| ◼︎ (Filled Diamond)       | Composition (strong ownership; if the container is destroyed, so is the contained object). |
+| △ (Triangle Arrow)       | Inheritance / Generalization (one class inherits from another).                            |
 
 ---
 
@@ -70,7 +72,8 @@ Utility Services: SocialMediaService is a stateless utility designed to format U
 
 ---
 
-## API Interaction Flow
+## Sequence Diagram
+
 I. User Registration
 <img width="6427" height="4405" alt="sequence_user_registration" src="https://github.com/user-attachments/assets/04380ae7-aa31-4d47-80a7-ceb8eb29ed23" />
 
@@ -94,6 +97,18 @@ IV. Fetching a List of Places
 
 V. Social Media Sharing
 <img width="8192" height="3551" alt="sequence_SocialMediaSharing" src="https://github.com/user-attachments/assets/16b47d17-83c6-40d7-aeb3-a0f025d1f423" />
+
+## Legend - UML Sequence Diagram 
+
+| Symbol                    | Meaning                                                                    |
+|---------------------------|----------------------------------------------------------------------------|
+| Actor                     | External entity (e.g., user) that interacts with the system.               |
+| `->`                      | Synchronous message or method call.                                        |
+| `-->`                     | Asynchronous message.                                                      |
+| `-->>` or dashed arrow    | Return message or response.                                                |
+| `alt` / `opt` / `loop`    | Control blocks: alternative, optional, or loop.                            |
+| `activate` / `deactivate` | Object's activation bar (lifeline emphasis).                               |
+| Lifeline (vertical line)  | Represents the lifespan of a participant during the interaction.           |
 
 ---
 
