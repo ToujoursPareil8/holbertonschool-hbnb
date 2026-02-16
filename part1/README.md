@@ -40,7 +40,8 @@ This document serves as the primary technical blueprint. Its goal is to guide th
 ---
 
 ## High-Level Package Diagram
-<img width="7222" height="5045" alt="hbnb_hlp_v2" src="https://github.com/user-attachments/assets/48c0da62-cdc9-41d6-937d-4d8fcc4ef007" />
+<img width="7222" height="5045" alt="hbnb_hlp_v2" src="https://github.com/user-attachments/assets/60193b13-cdea-4072-bd7c-fe410c8e619e" />
+
 
 The HBnB application utilizes a Three-Layer Architecture integrated with the Facade Design Pattern.
 Extrait de code
