@@ -51,12 +51,12 @@ class HBnBFacade:
         pass
 
     def create_place(self, place_data):
-        # 1. Fetch the owner (User) from the repo
+        # Fetch the owner (User) from the repo
         owner = self.get_user(place_data['owner_id'])
         if not owner:
             raise ValueError("Owner not found")
 
-        # 2. Fetch the amenities if provided
+        # Fetch the amenities if provided
         amenities = []
         if 'amenities' in place_data:
             for amenity_id in place_data['amenities']:
@@ -64,7 +64,7 @@ class HBnBFacade:
                 if amenity:
                     amenities.append(amenity)
 
-        # 3. Create the Place instance
+        # Create the Place instance
         new_place = Place(
             title=place_data['title'],
             description=place_data.get('description', ''),
