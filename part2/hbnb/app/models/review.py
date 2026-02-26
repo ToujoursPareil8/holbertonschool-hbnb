@@ -1,8 +1,7 @@
 from app.models.base_model import BaseModel
 from app.models.place import Place
 from app.models.user import User
-from part2.hbnb.app.models import place
-from part2.hbnb.app.models import user
+
 
 class Review(BaseModel):
     def __init__(self, text, rating, user, place):

@@ -1,12 +1,17 @@
-from flask import Flask
+from flask import Blueprint
 from flask_restx import Api
+from app.api.v1.users import api as users_ns
+from app.api.v1.places import api as places_ns
 
-from api.v1.places import api as places_ns 
+# This creates the logical grouping for version 1
+v1_blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
-def create_app():
-    app = Flask(__name__)
-    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API')
+# This attaches the RESTx API to that blueprint
+api = Api(v1_blueprint, 
+          version='1.0', 
+          title='HBnB API', 
+          description='HBnB Application API')
 
-    api.add_namespace(places_ns, path='/api/v1/places')
-
-    return app
+# Register the namespaces
+api.add_namespace(users_ns, path='/users')
+api.add_namespace(places_ns, path='/places')
