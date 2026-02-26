@@ -4,6 +4,7 @@ from app.models.user import User
 
 
 class Review(BaseModel):
+    allowed_update_fields = ['text', 'rating']
     def __init__(self, text, rating, user, place):
         super().__init__()
         if rating < 1 or rating > 5:

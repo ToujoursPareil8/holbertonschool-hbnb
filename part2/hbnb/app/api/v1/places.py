@@ -16,7 +16,15 @@ user_model = api.model('PlaceUser', {
     'email': fields.String(description='Email of the owner')
 })
 
-# Define the place model for input validation and documentation
+# ADDED: The review model specifically for places
+review_model = api.model('PlaceReview', {
+    'id': fields.String(description='Review ID'),
+    'text': fields.String(description='Text of the review'),
+    'rating': fields.Integer(description='Rating of the place (1-5)'),
+    'user_id': fields.String(description='ID of the user')
+})
+
+# UPDATED: place_model now includes the reviews list
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
@@ -24,7 +32,8 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
+    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's"),
+    'reviews': fields.List(fields.Nested(review_model), description='List of reviews')
 })
 
 @api.route('/')
@@ -73,11 +82,11 @@ class PlaceResource(Resource):
         if not place:
             return {'message': 'Place not found'}, 404
 
-        # Convert the list of Amenity objects into a list of dictionaries
-        amenities_list = [
-            {'id': amenity.id, 'name': amenity.name} 
-            for amenity in place.amenities
-        ]
+        amenities_list = [{'id': amenity.id, 'name': amenity.name} for amenity in place.amenities]
+        
+        # ADDED: Fetch the reviews to include in the response
+        reviews = facade.get_reviews_by_place(place_id)
+        reviews_list = [{'id': r.id, 'text': r.text, 'rating': r.rating, 'user_id': r.user.id} for r in reviews]
 
         return {
             'id': place.id,
@@ -91,7 +100,8 @@ class PlaceResource(Resource):
                 'last_name': place.owner.last_name,
                 'email': place.owner.email
             },
-            'amenities': amenities_list
+            'amenities': amenities_list,
+            'reviews': reviews_list  # Added to the return dictionary
         }, 200
 
     @api.expect(place_model)
@@ -101,13 +111,20 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
-        
-        # We try to update, and check if it returns None (meaning place not found)
-        # Note: You might need to adjust this depending on how you implemented update_place 
-        # in the Facade. If it raises an error, wrap in try/except.
         updated_place = facade.update_place(place_id, place_data)
-        
         if not updated_place:
             return {'message': 'Place not found'}, 404
-
         return {'message': 'Place updated successfully'}, 200
+
+# FIXED: Moved out of PlaceResource so the route registers properly
+@api.route('/<place_id>/reviews')
+class PlaceReviewList(Resource):
+    @api.response(200, 'List of reviews for the place retrieved successfully')
+    @api.response(404, 'Place not found')
+    def get(self, place_id):
+        """Get all reviews for a specific place"""
+        place = facade.get_place(place_id)
+        if not place:
+            return {'message': 'Place not found'}, 404
+        reviews = facade.get_reviews_by_place(place_id)
+        return [{'id': r.id, 'text': r.text, 'rating': r.rating} for r in reviews], 200
