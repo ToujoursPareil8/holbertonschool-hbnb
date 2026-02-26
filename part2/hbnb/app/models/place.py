@@ -2,6 +2,7 @@ from app.models.base_model import BaseModel
 
 class Place(BaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner, amenities=None):
+        allowed_update_fields = ['title', 'description', 'price', 'latitude', 'longitude']
         super().__init__()
         # These assignments will automatically trigger the @setter methods below
         self.title = title
