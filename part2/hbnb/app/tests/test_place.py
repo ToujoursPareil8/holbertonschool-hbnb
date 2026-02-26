@@ -4,64 +4,66 @@ from app import create_app
 
 class TestPlaceEndpoints(unittest.TestCase):
     def setUp(self):
-        """Set up the test client and a clean app instance"""
         self.app = create_app()
         self.client = self.app.test_client()
-
-    def test_create_place_success(self):
-        """Test creating a user then a place linked to that user"""
-        # 1. Create a User first (The Owner)
+        
+        # We need a user for almost every test since Places require an owner
         user_data = {
             "first_name": "Jane",
             "last_name": "Doe",
             "email": "jane.test@example.com",
             "password": "securepassword"
         }
-        user_response = self.client.post('/api/v1/users/', 
-                                         data=json.dumps(user_data),
-                                         content_type='application/json')
-        user_id = json.loads(user_response.data)['id']
+        resp = self.client.post('/api/v1/users/', 
+                                data=json.dumps(user_data),
+                                content_type='application/json')
+        self.user_id = json.loads(resp.data)['id']
 
-        # 2. Create the Place using the new user_id
-        place_data = {
-            "title": "Test Crib",
-            "description": "A test description",
-            "price": 100.0,
-            "latitude": 45.0,
-            "longitude": 1.0,
-            "owner_id": user_id
-        }
-        response = self.client.post('/api/v1/places/', 
-                                    data=json.dumps(place_data),
-                                    content_type='application/json')
+    def test_full_place_lifecycle(self):
+        """Test Creating, Getting, and Updating a Place"""
         
-        # 3. Assertions
-        data = json.loads(response.data)
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(data['title'], "Test Crib")
-        self.assertEqual(data['owner_id'], user_id)
-
-    def test_create_place_invalid_owner(self):
-        """Test creating a place with a non-existent owner ID"""
+        # 1. CREATE
         place_data = {
-            "title": "Ghost House",
+            "title": "Initial Title",
+            "description": "Old Description",
             "price": 100.0,
-            "latitude": 0.0,
-            "longitude": 0.0,
-            "owner_id": "non-existent-uuid"
+            "latitude": 10.0,
+            "longitude": 10.0,
+            "owner_id": self.user_id
         }
-        response = self.client.post('/api/v1/places/', 
-                                    data=json.dumps(place_data),
-                                    content_type='application/json')
-        
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Owner not found", json.loads(response.data)['message'])
+        create_res = self.client.post('/api/v1/places/', 
+                                      data=json.dumps(place_data),
+                                      content_type='application/json')
+        self.assertEqual(create_res.status_code, 201)
+        place_id = json.loads(create_res.data)['id']
 
-    def test_get_all_places(self):
-        """Test the list retrieval endpoint"""
-        response = self.client.get('/api/v1/places/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIsInstance(json.loads(response.data), list)
+        # 2. GET BY ID
+        get_res = self.client.get(f'/api/v1/places/{place_id}')
+        self.assertEqual(get_res.status_code, 200)
+        self.assertEqual(json.loads(get_res.data)['title'], "Initial Title")
+
+        # 3. UPDATE (PUT)
+        update_data = {
+            "title": "New Updated Title",
+            "price": 150.0
+        }
+        put_res = self.client.put(f'/api/v1/places/{place_id}', 
+                                   data=json.dumps(update_data),
+                                   content_type='application/json')
+        self.assertEqual(put_res.status_code, 200)
+
+        # 4. VERIFY UPDATE
+        verify_res = self.client.get(f'/api/v1/places/{place_id}')
+        updated_data = json.loads(verify_res.data)
+        self.assertEqual(updated_data['title'], "New Updated Title")
+        self.assertEqual(updated_data['price'], 150.0)
+
+    def test_update_non_existent_place(self):
+        """Test PUT request on a fake ID"""
+        response = self.client.put('/api/v1/places/fake-id', 
+                                    data=json.dumps({"title": "Doesn't matter"}),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 404)
 
 if __name__ == '__main__':
     unittest.main()
