@@ -10,7 +10,7 @@ v1_blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
 # This attaches the RESTx API to that blueprint
 api = Api(v1_blueprint, 
-          version='1.0', 
+          version='1.0',
           title='HBnB API', 
           description='HBnB Application API')
 

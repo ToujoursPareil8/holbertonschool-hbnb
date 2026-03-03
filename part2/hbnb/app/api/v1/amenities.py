@@ -34,6 +34,15 @@ class AmenityResource(Resource):
         pass
 
     @api.expect(amenity_model)
+    def post(self):
+        """Register a new amenity"""
+        amenity_data = api.payload
+        try:
+            new_amenity = facade.create_amenity(amenity_data)
+            # MUST include the , 201 here
+            return {'id': new_amenity.id, 'name': new_amenity.name}, 201
+        except ValueError as e:
+            return {'message': str(e)}, 400
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')

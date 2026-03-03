@@ -25,7 +25,13 @@ class HBnBFacade:
 
     # --- AMENITY METHODS (Placeholders) ---
     def create_amenity(self, amenity_data):
-        pass
+        from app.models.amenity import Amenity
+        new_amenity = Amenity(name=amenity_data['name'])
+        
+        # This line is what makes the GET request work later
+        self.amenity_repo.add(new_amenity)
+        
+        return new_amenity
 
     def get_amenity(self, amenity_id):
         pass
