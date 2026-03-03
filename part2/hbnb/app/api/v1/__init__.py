@@ -5,6 +5,7 @@ from app.api.v1.places import api as places_ns
 from app.api.v1.reviews import api as reviews_ns
 from app.api.v1.amenities import api as amenities_ns
 
+
 # This creates the logical grouping for version 1
 v1_blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 

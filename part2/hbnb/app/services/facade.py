@@ -27,14 +27,21 @@ class HBnBFacade:
     def create_amenity(self, amenity_data):
         from app.models.amenity import Amenity
         new_amenity = Amenity(name=amenity_data['name'])
-        
-        # This line is what makes the GET request work later
         self.amenity_repo.add(new_amenity)
-        
         return new_amenity
 
     def get_amenity(self, amenity_id):
-        pass
+        return self.amenity_repo.get(amenity_id)
+
+    def get_all_amenities(self):
+        return self.amenity_repo.get_all()
+
+    def update_amenity(self, amenity_id, amenity_data):
+        amenity = self.get_amenity(amenity_id)
+        if amenity:
+            amenity.update(amenity_data)
+            return amenity
+        return None
 
     # --- PLACE METHODS ---
     def create_place(self, place_data):
