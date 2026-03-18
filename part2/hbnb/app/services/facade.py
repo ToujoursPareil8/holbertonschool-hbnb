@@ -13,6 +13,7 @@ class HBnBFacade:
 
     # --- USER METHODS ---
     def create_user(self, user_data):
+        from app.models.user import User
         user = User(**user_data)
         self.user_repo.add(user)
         return user

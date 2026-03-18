@@ -23,12 +23,12 @@ class User(BaseModel):
         self.is_admin = is_admin
         self.hash_password(password)
 
-        def hash_password(self, password):
-            """Hashes the password before storing it."""
-            # generate_password_hash turns "secret" into b'$2b$12$...'
-            # .decode('utf-8') turns that byte string into a normal Python string
-            self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        # generate_password_hash turns "secret" into b'$2b$12$...'
+        # .decode('utf-8') turns that byte string into a normal Python string
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        def verify_password(self, password):
-            """Verifies if the provided password matches the hashed password."""
-            return bcrypt.check_password_hash(self.password, password)
+    def verify_password(self, password):
+        """Verifies if the provided password matches the hashed password."""
+        return bcrypt.check_password_hash(self.password, password)
