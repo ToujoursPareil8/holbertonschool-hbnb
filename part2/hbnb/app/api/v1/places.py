@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import facade
 
 api = Namespace('places', description='Place operations')
@@ -39,38 +40,31 @@ place_model = api.model('Place', {
 @api.route('/')
 class PlaceList(Resource):
     @api.expect(place_model)
+    @api.marshal_with(place_model, code=201)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new place"""
+        current_user_id = get_jwt_identity() # Read the wristband
+        
         place_data = api.payload
+        # Overwrite whatever the user typed to enforce that the logged-in user is the owner
+        place_data['owner_id'] = current_user_id 
+        
         try:
             new_place = facade.create_place(place_data)
         except ValueError as e:
-            return {'message': str(e)}, 400
+            api.abort(400, str(e))
 
-        return {
-            'id': new_place.id,
-            'title': new_place.title,
-            'description': new_place.description,
-            'price': new_place.price,
-            'latitude': new_place.latitude,
-            'longitude': new_place.longitude,
-            'owner_id': new_place.owner.id
-        }, 201
+        return new_place, 201
 
+    @api.marshal_list_with(place_model)
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
         all_places = facade.get_all_places()
-        return [
-            {
-                'id': place.id,
-                'title': place.title,
-                'latitude': place.latitude,
-                'longitude': place.longitude
-            } for place in all_places
-        ], 200
+        return all_places, 200
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
@@ -128,3 +122,4 @@ class PlaceReviewList(Resource):
             return {'message': 'Place not found'}, 404
         reviews = facade.get_reviews_by_place(place_id)
         return [{'id': r.id, 'text': r.text, 'rating': r.rating} for r in reviews], 200
+    

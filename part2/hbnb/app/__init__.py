@@ -1,14 +1,17 @@
 from flask import Flask
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 
 bcrypt = Bcrypt()
+jwt = JWTManager()
 
-def create_app(config_class="config.DevelopmentConfig"): # <-- Fixed config_class
+def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    bcrypt.init_app(app)
 
-    # Hire the department manager
+    bcrypt.init_app(app)
+    jwt.init_app(app)
+    
     from app.api.v1 import v1_blueprint
     app.register_blueprint(v1_blueprint)
     
