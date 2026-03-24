@@ -10,11 +10,22 @@ from app.api.v1.auth import api as auth_ns
 # This creates the logical grouping for version 1
 v1_blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+    }
+}
 # This attaches the RESTx API to that blueprint
 api = Api(v1_blueprint, 
-          version='1.0',
-          title='HBnB API', 
-          description='HBnB Application API')
+        version='1.0',
+        title='HBnB API', 
+        description='HBnB Application API',
+        authorizations=authorizations,
+        security='Bearer Auth',
+        )
 
 # Register the namespaces
 api.add_namespace(users_ns, path='/users')

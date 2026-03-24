@@ -23,8 +23,10 @@ class HBnBFacade:
 
     def get_user_by_email(self, email):
         return self.user_repo.get_by_attribute('email', email)
-
-    # --- AMENITY METHODS (Placeholders) ---
+    
+    def get_all_users(self):
+        return self.user_repo.get_all()
+    
     def create_amenity(self, amenity_data):
         from app.models.amenity import Amenity
         new_amenity = Amenity(name=amenity_data['name'])

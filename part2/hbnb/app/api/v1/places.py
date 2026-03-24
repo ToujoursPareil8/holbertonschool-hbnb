@@ -27,6 +27,7 @@ review_model = api.model('PlaceReview', {
 
 # UPDATED: place_model now includes the reviews list
 place_model = api.model('Place', {
+    'id': fields.String(description='Place ID'),
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
@@ -68,17 +69,19 @@ class PlaceList(Resource):
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
+    
+    # --- The Awesome GET (Public) ---
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
-        """Get place details by ID"""
+        """Get place details by ID (including amenities and reviews)"""
         place = facade.get_place(place_id)
         if not place:
             return {'message': 'Place not found'}, 404
 
         amenities_list = [{'id': amenity.id, 'name': amenity.name} for amenity in place.amenities]
         
-        # ADDED: Fetch the reviews to include in the response
+        # Fetch the reviews to include in the response
         reviews = facade.get_reviews_by_place(place_id)
         reviews_list = [{'id': r.id, 'text': r.text, 'rating': r.rating, 'user_id': r.user.id} for r in reviews]
 
@@ -95,19 +98,35 @@ class PlaceResource(Resource):
                 'email': place.owner.email
             },
             'amenities': amenities_list,
-            'reviews': reviews_list  # Added to the return dictionary
+            'reviews': reviews_list
         }, 200
 
+    # --- The Secure PUT (Protected by the Bouncer) ---
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
+    @api.response(403, 'Unauthorized action')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @jwt_required() # <--- The Bouncer
     def put(self, place_id):
         """Update a place's information"""
+        current_user_id = get_jwt_identity() # 1. Read the wristband
+        
+        place = facade.get_place(place_id) # 2. Pull the House Deed
+        if not place:
+            api.abort(404, 'Place not found')
+            
+        # 3. THE AUTHORIZATION CHECK: Do the IDs match?
+        if place.owner.id != current_user_id: 
+            return {'error': 'Unauthorized action'}, 403
+
+        # 4. If we made it past the Bouncer, update the place
         place_data = api.payload
         updated_place = facade.update_place(place_id, place_data)
+        
         if not updated_place:
-            return {'message': 'Place not found'}, 404
+            return {'message': 'Place not found during update'}, 404
+            
         return {'message': 'Place updated successfully'}, 200
 
 # FIXED: Moved out of PlaceResource so the route registers properly
