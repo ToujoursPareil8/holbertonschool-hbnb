@@ -1,19 +1,19 @@
-from app.persistence.repository import InMemoryRepository
+from app.persistence.repository import SQLAlchemyRepository
 from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
+from app.models.amenity import Amenity
 
 class HBnBFacade:
     def __init__(self):
-        # Initialize ALL repositories in one place
-        self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        # The new SQLAlchemy Filing Clerks!
+        self.user_repo = SQLAlchemyRepository(User)
+        self.place_repo = SQLAlchemyRepository(Place)
+        self.review_repo = SQLAlchemyRepository(Review)
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
 
     # --- USER METHODS ---
     def create_user(self, user_data):
-        from app.models.user import User
         user = User(**user_data)
         self.user_repo.add(user)
         return user
@@ -27,8 +27,12 @@ class HBnBFacade:
     def get_all_users(self):
         return self.user_repo.get_all()
     
+    def update_user(self, user_id, user_data):
+        self.user_repo.update(user_id, user_data)
+        return self.get_user(user_id)
+
+    # --- AMENITY METHODS ---
     def create_amenity(self, amenity_data):
-        from app.models.amenity import Amenity
         new_amenity = Amenity(name=amenity_data['name'])
         self.amenity_repo.add(new_amenity)
         return new_amenity
@@ -40,11 +44,8 @@ class HBnBFacade:
         return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        amenity = self.get_amenity(amenity_id)
-        if amenity:
-            amenity.update(amenity_data)
-            return amenity
-        return None
+        self.amenity_repo.update(amenity_id, amenity_data)
+        return self.get_amenity(amenity_id)
 
     # --- PLACE METHODS ---
     def create_place(self, place_data):
@@ -70,7 +71,7 @@ class HBnBFacade:
             amenities=amenities
         )
         
-        self.place_repo.add(new_place) # This will work now!
+        self.place_repo.add(new_place)
         return new_place
 
     def get_place(self, place_id):
@@ -80,55 +81,47 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        place = self.get_place(place_id)
-        if not place:
-            return None
-        
-        place.update(place_data) 
-        return place
+        self.place_repo.update(place_id, place_data)
+        return self.get_place(place_id)
     
     # --- REVIEW METHODS ---
     def create_review(self, review_data):
-            user = self.get_user(review_data['user_id'])
-            place = self.get_place(review_data['place_id'])
-            if not user or not place:
-                raise ValueError("User or Place not found")
-            
-            # Validate rating
-            if not (1 <= review_data['rating'] <= 5):
-                raise ValueError("Rating must be between 1 and 5")
+        user = self.get_user(review_data['user_id'])
+        place = self.get_place(review_data['place_id'])
+        if not user or not place:
+            raise ValueError("User or Place not found")
+        
+        # Validate rating
+        if not (1 <= review_data['rating'] <= 5):
+            raise ValueError("Rating must be between 1 and 5")
 
-            new_review = Review(
-                text=review_data['text'],
-                rating=review_data['rating'],
-                user=user,
-                place=place
-            )
-            self.review_repo.add(new_review)
-            return new_review
+        new_review = Review(
+            text=review_data['text'],
+            rating=review_data['rating'],
+            user=user,
+            place=place
+        )
+        self.review_repo.add(new_review)
+        return new_review
     
     def get_review(self, review_id):
-            return self.review_repo.get(review_id)
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-            return self.review_repo.get_all()
+        return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-            all_reviews = self.get_all_reviews()
-            return [r for r in all_reviews if r.place.id == place_id]
+        all_reviews = self.get_all_reviews()
+        return [r for r in all_reviews if r.place.id == place_id]
 
     def update_review(self, review_id, review_data):
-            review = self.get_review(review_id)
-            if not review:
-                return None
-            # Ensure 'text' and 'rating' are in Review.allowed_update_fields
-            review.update(review_data)
-            return review
+        self.review_repo.update(review_id, review_data)
+        return self.get_review(review_id)
 
     def delete_review(self, review_id):
-            review_id = str(review_id)  # Ensure review_id is a string
-            review = self.review_repo.get(review_id)
-            if not review:
-                return False
-            self.review_repo.delete(review_id)
-            return True
+        review_id = str(review_id)
+        review = self.review_repo.get(review_id)
+        if not review:
+            return False
+        self.review_repo.delete(review_id)
+        return True

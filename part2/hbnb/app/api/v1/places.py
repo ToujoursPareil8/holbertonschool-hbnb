@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt # <--- ADDED get_jwt
 from app.services import facade
 
 api = Namespace('places', description='Place operations')
@@ -107,17 +107,21 @@ class PlaceResource(Resource):
     @api.response(403, 'Unauthorized action')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
-    @jwt_required() # <--- The Bouncer
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
-        current_user_id = get_jwt_identity() # 1. Read the wristband
+        current_user_id = get_jwt_identity()
+        
+        # 1. Look at the back of the wristband for the VIP Badge!
+        claims = get_jwt()
+        is_admin = claims.get('is_admin', False)
         
         place = facade.get_place(place_id) # 2. Pull the House Deed
         if not place:
             api.abort(404, 'Place not found')
             
-        # 3. THE AUTHORIZATION CHECK: Do the IDs match?
-        if place.owner.id != current_user_id: 
+        # 3. THE AUTHORIZATION CHECK: Are you an admin? If not, do the IDs match?
+        if not is_admin and place.owner.id != current_user_id: 
             return {'error': 'Unauthorized action'}, 403
 
         # 4. If we made it past the Bouncer, update the place
@@ -141,4 +145,3 @@ class PlaceReviewList(Resource):
             return {'message': 'Place not found'}, 404
         reviews = facade.get_reviews_by_place(place_id)
         return [{'id': r.id, 'text': r.text, 'rating': r.rating} for r in reviews], 200
-    
