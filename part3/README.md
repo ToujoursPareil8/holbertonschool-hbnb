@@ -1,9 +1,35 @@
-## Database Schema
-The following diagram represents the relational database schema for the HBnB project, showing the relationships between Users, Places, Reviews, and Amenities.
+## Architecture de la Base de Données (Méthode Merise)
+
+### 1. Modèle Conceptuel de Données (MCD)
+Ce diagramme illustre les règles de gestion métier et les cardinalités (0,n / 1,1) entre nos entités.
+
+```mermaid
+flowchart LR
+    %% Entités
+    U["UTILISATEUR<br>id<br>first_name<br>last_name<br>email<br>password<br>is_admin"]
+    L["LIEU<br>id<br>title<br>description<br>price<br>latitude<br>longitude"]
+    A["AVIS<br>id<br>text<br>rating"]
+    C["COMMODITE<br>id<br>name"]
+
+    %% Associations
+    POSSEDE((POSSEDE))
+    ECRIT((ECRIT))
+    CONCERNE((CONCERNE))
+    DISPOSE((DISPOSE))
+
+    %% Cardinalités
+    U ---|"0,n"| POSSEDE ---|"1,1"| L
+    U ---|"0,n"| ECRIT ---|"1,1"| A
+    L ---|"0,n"| CONCERNE ---|"1,1"| A
+    L ---|"0,n"| DISPOSE ---|"0,n"| C
+```
+
+### 2. Modèle Logique de Données (MLD)
+Ce diagramme traduit le MCD en tables relationnelles prêtes pour SQL, avec l'apparition des Clés Étrangères (FK) et de la table d'association `LIEU_COMMODITE` issue de la relation "0,n --- 0,n".
 
 ```mermaid
 erDiagram
-    USER {
+    UTILISATEUR {
         string id PK
         string first_name
         string last_name
@@ -11,7 +37,8 @@ erDiagram
         string password
         boolean is_admin
     }
-    PLACE {
+
+    LIEU {
         string id PK
         string title
         string description
@@ -20,24 +47,29 @@ erDiagram
         float longitude
         string owner_id FK
     }
-    REVIEW {
+
+    AVIS {
         string id PK
         string text
         int rating
         string user_id FK
         string place_id FK
     }
-    AMENITY {
+
+    COMMODITE {
         string id PK
         string name
     }
-    PLACE_AMENITY {
-        string place_id FK
-        string amenity_id FK
+
+    LIEU_COMMODITE {
+        string place_id PK,FK
+        string amenity_id PK,FK
     }
 
-    USER ||--o{ PLACE : "owns"
-    USER ||--o{ REVIEW : "writes"
-    PLACE ||--o{ REVIEW : "has"
-    PLACE ||--o{ PLACE_AMENITY : "includes"
-    AMENITY ||--o{ PLACE_AMENITY : "is included in"
+    %% Relations
+    UTILISATEUR ||--o{ LIEU : "possède (owner_id)"
+    UTILISATEUR ||--o{ AVIS : "écrit (user_id)"
+    LIEU ||--o{ AVIS : "reçoit (place_id)"
+    LIEU ||--o{ LIEU_COMMODITE : "inclut"
+    COMMODITE ||--o{ LIEU_COMMODITE : "est dans"
+```
