@@ -2,15 +2,18 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 # Instantiate the tools
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 jwt = JWTManager()
+cors = CORS()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    CORS(app)
 
     # Initialize the tools with the app
     db.init_app(app)
