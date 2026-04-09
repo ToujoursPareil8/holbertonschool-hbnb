@@ -50,17 +50,29 @@ main {
     margin: 0 auto;
 }
 
-/* CARDS: GUNMETAL GREY + RED ACCENTS */
+/* --- THE GRID SYSTEM --- */
+#places-list {
+    display: grid;
+    /* This automatically creates as many 300px columns as will fit on the screen */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px; /* Spacing between the cards */
+    margin-top: 30px;
+}
+
 /* CARDS: GUNMETAL GREY + RED ACCENTS */
 .place-card, .review-card {
-    margin: 20px;
-    /* We removed the padding here so the image can stretch to the edges */
     border: 1px solid #ff0000; 
     border-radius: 10px;
     background-color: #1a1e22; 
     box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3); 
     color: #e0e0e0; 
     overflow: hidden; /* This keeps the image tucked inside the rounded corners */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.place-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(255, 0, 0, 0.6);
 }
 
 /* We add the padding back ONLY for the text areas (reviews and the new card-content) */
@@ -210,15 +222,27 @@ input, textarea, select {
 }
 
 /* Custom Review Rating Icons */
+/* Custom Review Rating Icons - CYBORG UPGRADE */
 .review-rating {
-    margin-top: 8px;
+    margin-top: 12px;
     display: flex;
-    gap: 4px; /* Space between the icons */
+    gap: 6px; /* Slightly more breathing room between shields */
+    align-items: center;
 }
 
 .rating-icon {
-    width: 20px; /* Adjust this to make the icons bigger or smaller */
-    height: 20px;
-    /* Optional: If the SVG is dark and you want it bright red like the theme, uncomment the next line */
-    /* filter: drop-shadow(0 0 2px #ff0000); */
+    width: 24px; /* Bumped up the size just a bit so they stand out */
+    height: 24px;
+    
+    /* THE CYBORG GLOW: Adds a high-tech red neon shadow around the shield */
+    filter: drop-shadow(0px 0px 4px rgba(255, 0, 0, 0.8));
+    
+    /* Prepares the icon for a smooth animation */
+    transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out; 
+}
+
+/* Adds a slick, interactive feel when a user hovers their mouse over the rating */
+.rating-icon:hover {
+    transform: scale(1.2); /* Slightly enlarges the icon */
+    filter: drop-shadow(0px 0px 8px rgba(255, 0, 0, 1)); /* Intensifies the glow */
 }
