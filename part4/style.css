@@ -51,14 +51,40 @@ main {
 }
 
 /* CARDS: GUNMETAL GREY + RED ACCENTS */
+/* CARDS: GUNMETAL GREY + RED ACCENTS */
 .place-card, .review-card {
     margin: 20px;
-    padding: 10px;
-    border: 1px solid #ff0000; /* Red accent border */
+    /* We removed the padding here so the image can stretch to the edges */
+    border: 1px solid #ff0000; 
     border-radius: 10px;
-    background-color: #1a1e22; /* Gunmetal grey card background */
-    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3); /* subtle red accent shadow */
-    color: #e0e0e0; /* light text for cards */
+    background-color: #1a1e22; 
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3); 
+    color: #e0e0e0; 
+    overflow: hidden; /* This keeps the image tucked inside the rounded corners */
+}
+
+/* We add the padding back ONLY for the text areas (reviews and the new card-content) */
+.review-card, .card-content {
+    padding: 20px;
+}
+
+/* Image on the Index Page Cards */
+.place-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ff0000;
+    display: block;
+}
+
+/* Giant Image on the specific Place Details Page */
+.place-detail-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ff0000;
+    margin-bottom: 20px;
 }
 
 .place-card h3 {

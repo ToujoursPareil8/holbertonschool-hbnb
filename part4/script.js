@@ -1,4 +1,11 @@
 /* Hero Hangouts - Frontend JavaScript */
+// Map the place titles directly to your local images
+const PLACE_IMAGES = {
+    "The Batcave": "images/The_Batcave.webp",
+    "Fortress of Solitude": "images/Fortress_of_Solitude.webp",
+    "The Watchtower": "images/Watchtower_-_Annexes.webp",
+    "Joker's Funhouse": "images/joker_base.jpg"
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm    = document.getElementById('login-form');
@@ -163,14 +170,24 @@ function displayPlaces(places) {
     placesList.innerHTML = '';
 
     places.forEach(place => {
-        const card       = document.createElement('div');
+        const card       = document.createElement('article');
         card.className   = 'place-card';
-        card.dataset.price = place.price;
+        
+        // Defensive fallback: If the API forgets the price, default to 0 or '???'
+        const price = place.price !== undefined ? place.price : '???';
+        card.dataset.price = price;
 
+        // Grab the image from our dictionary, or use the logo as a backup
+        const imageUrl = PLACE_IMAGES[place.title] || "images/logo.png";
+
+        // Added the image tag and wrapped the text in a 'card-content' div for styling
         card.innerHTML = `
-            <h3>${place.title}</h3>
-            <p>Price: ${place.price} Credits/Night</p>
-            <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+            <img src="${imageUrl}" alt="${place.title}" class="place-image">
+            <div class="card-content">
+                <h3>${place.title}</h3>
+                <p>Price: ${price} Credits/Night</p>
+                <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+            </div>
         `;
 
         placesList.appendChild(card);
@@ -212,18 +229,33 @@ function displayPlaceDetails(place) {
     const section  = document.getElementById('place-details');
     section.innerHTML = '';
 
-    // Main info block
+    const price = place.price !== undefined ? place.price : '???';
+    
+    // THE FIX: Check if place.owner exists, and if it does, combine the first and last name!
+    let host = 'Classified Identity';
+    if (place.owner && place.owner.first_name) {
+        host = `${place.owner.first_name} ${place.owner.last_name}`;
+    } else if (place.owner_id) {
+        host = place.owner_id; // Fallback just in case
+    }
+
+    const imageUrl = PLACE_IMAGES[place.title] || "images/logo.png";
+
+    // Main info block with image injected
     const info = document.createElement('div');
     info.className = 'place-info';
     info.innerHTML = `
-        <h1>${place.title}</h1>
-        <p><strong>Host:</strong> ${place.owner_id}</p>
-        <p><strong>Price:</strong> ${place.price} Credits/Night</p>
-        <p><strong>Description:</strong> ${place.description}</p>
+        <img src="${imageUrl}" alt="${place.title}" class="place-detail-image">
+        <div class="detail-text">
+            <h1>${place.title}</h1>
+            <p><strong>Host:</strong> ${host}</p>
+            <p><strong>Price:</strong> ${price} Credits/Night</p>
+            <p><strong>Description:</strong> ${place.description || 'No description available.'}</p>
+        </div>
     `;
     section.appendChild(info);
 
-    // Amenities
+    // Amenities (Keep this exactly the same)
     if (place.amenities && place.amenities.length > 0) {
         const h3 = document.createElement('h3');
         h3.textContent = 'Amenities';
@@ -239,7 +271,7 @@ function displayPlaceDetails(place) {
         section.appendChild(ul);
     }
 
-    // Reviews
+    // Reviews (Keep this exactly the same)
     const reviewsSection      = document.getElementById('reviews-list');
     reviewsSection.innerHTML  = '<h2>Reviews from the League</h2>';
 
