@@ -74,6 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
             await submitReview(token, placeId, reviewText, rating);
         });
     }
+
+    const logoutLink   = document.getElementById('logout-link');
+
+    // LOGOUT LOGIC
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Destroy the cookie by setting its expiration date to the past
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            // Send them back to the homepage to refresh the state
+            window.location.href = 'index.html';
+        });
+    }
 });
 
 // ==========================================
@@ -90,8 +103,23 @@ function getCookie(name) {
 function checkAuthentication() {
     const token            = getCookie('token');
     const loginLink        = document.getElementById('login-link');
+    const logoutLink       = document.getElementById('logout-link');
     const addReviewSection = document.getElementById('add-review');
 
+    if (loginLink && logoutLink) {
+        if (!token) {
+            loginLink.style.display = 'block';
+            logoutLink.style.display = 'none';
+        } else {
+            loginLink.style.display = 'none';
+            logoutLink.style.display = 'block';
+            
+            // Only fetch places if we are on the index page
+            if (document.getElementById('places-list')) {
+                fetchPlaces(token);
+            }
+        }
+    }
     // INDEX: show/hide login link
     if (loginLink) {
         if (!token) {
@@ -263,11 +291,29 @@ function displayPlaceDetails(place) {
 
         const ul = document.createElement('ul');
         ul.className = 'amenities-list';
+        
         place.amenities.forEach(amenity => {
-            const li       = document.createElement('li');
-            li.textContent = amenity.name;
+            const li = document.createElement('li');
+            
+            // 1. Convert the name to lowercase so it's easy to check
+            const lowerName = amenity.name.toLowerCase();
+            let iconHtml = '';
+
+            // 2. Check for keywords and pick the right image path
+            if (lowerName.includes('wifi')) {
+                iconHtml = `<img src="images/icon_wifi.png" alt="WiFi" class="amenity-icon">`;
+            } else if (lowerName.includes('bed') || lowerName.includes('pod')) {
+                iconHtml = `<img src="images/icon_bed.png" alt="Bed" class="amenity-icon">`;
+            } else if (lowerName.includes('bath') || lowerName.includes('shower')) {
+                iconHtml = `<img src="images/icon_bath.png" alt="Bath" class="amenity-icon">`;
+            }
+
+            // 3. Inject the icon (if found) right next to the amenity text
+            li.innerHTML = `${iconHtml} ${amenity.name}`;
+            
             ul.appendChild(li);
         });
+        
         section.appendChild(ul);
     }
 
@@ -276,12 +322,20 @@ function displayPlaceDetails(place) {
     reviewsSection.innerHTML  = '<h2>Reviews from the League</h2>';
 
     if (place.reviews && place.reviews.length > 0) {
-        place.reviews.forEach(review => {
+place.reviews.forEach(review => {
             const card       = document.createElement('article');
             card.className   = 'review-card';
+            
+            // Generate the HTML for the icons based on the rating number
+            let ratingIconsHtml = '';
+            for (let i = 0; i < review.rating; i++) {
+                // Change 'favicon.svg' if you decided to use the .png instead!
+                ratingIconsHtml += `<img src="images/favicon.svg" alt="Rating Icon" class="rating-icon">`;
+            }
+
             card.innerHTML   = `
                 <p><strong>${review.user_name || 'Anonymous'}:</strong> ${review.text}</p>
-                <p>Rating: ${review.rating}/5</p>
+                <div class="review-rating">${ratingIconsHtml}</div>
             `;
             reviewsSection.appendChild(card);
         });

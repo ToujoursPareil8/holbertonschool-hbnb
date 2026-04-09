@@ -208,3 +208,17 @@ input, textarea, select {
     color: #cc0000; /* darker red hover */
     text-decoration: none;
 }
+
+/* Custom Review Rating Icons */
+.review-rating {
+    margin-top: 8px;
+    display: flex;
+    gap: 4px; /* Space between the icons */
+}
+
+.rating-icon {
+    width: 20px; /* Adjust this to make the icons bigger or smaller */
+    height: 20px;
+    /* Optional: If the SVG is dark and you want it bright red like the theme, uncomment the next line */
+    /* filter: drop-shadow(0 0 2px #ff0000); */
+}
