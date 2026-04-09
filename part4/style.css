@@ -246,3 +246,24 @@ input, textarea, select {
     transform: scale(1.2); /* Slightly enlarges the icon */
     filter: drop-shadow(0px 0px 8px rgba(255, 0, 0, 1)); /* Intensifies the glow */
 }
+
+/* Giant Image on the specific Place Details Page */
+.place-detail-image {
+    width: 100%;
+    max-width: 800px; /* Stops the image from stretching to the full 1200px */
+    height: auto; /* Lets the height scale naturally */
+    max-height: 450px; /* Prevents it from getting too tall */
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ff0000;
+    
+    /* This centers the image horizontally above the text */
+    display: block; 
+    margin: 0 auto 20px auto; 
+}
+
+/* Optional: Center the text right under the image to make it look like a neat column */
+.place-info .detail-text {
+    max-width: 800px;
+    margin: 0 auto;
+}
