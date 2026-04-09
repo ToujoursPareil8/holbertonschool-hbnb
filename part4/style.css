@@ -1,4 +1,4 @@
-/* DC Universe Theme */
+/* Cyborg/High-Tech Theme */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -7,18 +7,24 @@
 }
 
 body {
-    background-color: #0b0d0f; /* Dark Gotham vibe */
-    color: #e0e0e0;
+    background-color: #a8a8b0;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+    ); /* effet grille métallique subtil */
 }
 
 header {
-    background-color: #003366; /* Justice League Blue */
-    color: #fff;
+    background-color: #f0f0f0; /* Lighter silver/grey header */
+    color: #1a1e22;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 3px solid #FFD700;
+    border-bottom: 3px solid #ff0000; /* Vibrant Red accent border */
 }
 
 .logo {
@@ -27,11 +33,15 @@ header {
 }
 
 nav a, .login-button {
-    color: #FFD700;
+    color: #ff0000; /* Red accents on text */
     text-decoration: none;
     margin-left: 1.5rem;
     font-weight: bold;
     text-transform: uppercase;
+}
+
+nav a:hover, .login-button:hover {
+    color: #e0e0e0; /* Subtle hover effect */
 }
 
 main {
@@ -40,18 +50,19 @@ main {
     margin: 0 auto;
 }
 
-/* REQUIRED CLASSES */
+/* CARDS: GUNMETAL GREY + RED ACCENTS */
 .place-card, .review-card {
     margin: 20px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #ff0000; /* Red accent border */
     border-radius: 10px;
-    background-color: #1a1e22;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    background-color: #1a1e22; /* Gunmetal grey card background */
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3); /* subtle red accent shadow */
+    color: #e0e0e0; /* light text for cards */
 }
 
 .place-card h3 {
-    color: #FFD700;
+    color: #ff0000; /* Vibrant Red headline for emphasis */
     margin-bottom: 0.5rem;
 }
 
@@ -59,15 +70,16 @@ main {
     display: inline-block;
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #FFD700;
-    color: #000;
+    background-color: #ff0000; /* Red background */
+    color: #fff; /* White/Silver text for contrast */
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
+    border: none;
 }
 
 .details-button:hover {
-    background-color: #e6c200;
+    background-color: #cc0000; /* Darker red hover */
 }
 
 .place-info {
@@ -78,24 +90,26 @@ main {
 footer {
     text-align: center;
     padding: 2rem;
-    background-color: #001a33;
+    background-color: #e0e0e0; /* light grey footer */
     color: #888;
     font-size: 0.9rem;
     margin-top: 2rem;
 }
 
-/* Form Styling */
+/* Form Styling: SILVER INPUTS + DARK TEXT */
 form {
-    background: #1a1e22;
+    background: #f0f0f0; /* Lighter silver form background */
     padding: 2rem;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid #cc0000; /* red border accent */
+    color: #1a1e22; /* dark form text */
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #FFD700;
+    color: #cc0000; /* red label accents */
+    font-weight: bold;
 }
 
 input, textarea, select {
@@ -103,12 +117,12 @@ input, textarea, select {
     padding: 0.5rem;
     margin-bottom: 1rem;
     border-radius: 4px;
-    border: 1px solid #444;
-    background: #0b0d0f;
-    color: white;
+    border: 1px solid #ff0000; /* red border */
+    background: #e0e0e0; /* dark silver input background */
+    color: #1a1e22; /* dark text */
 }
 
-/* Amenities Icons Styling */
+/* Amenities Icons: REMOVE INVERT, DARK ICONS */
 .amenities-list {
     list-style-type: none;
     margin-top: 10px;
@@ -119,12 +133,52 @@ input, textarea, select {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-    color: #e0e0e0;
+    color: #1a1e22; /* dark text in list */
 }
 
 .amenity-icon {
     width: 24px;
     height: auto;
     margin-right: 10px;
-    filter: invert(1);
+    /* Removed: filter: invert(1); */
+    /* Icons are now black/dark on silver */
+}
+
+/* --- MODAL STYLES: SILVER BOX + RED CLOSE --- */
+.modal {
+    display: none;
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.7); 
+}
+
+.modal-content {
+    background-color: #f0f0f0; /* light silver box */
+    margin: 10% auto; 
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3); /* red shadow */
+    color: #1a1e22; /* dark modal text */
+}
+
+/* The Close 'X' Button: RED ACCENT */
+.close-button {
+    color: #ff0000; /* bright red accent */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #cc0000; /* darker red hover */
+    text-decoration: none;
 }

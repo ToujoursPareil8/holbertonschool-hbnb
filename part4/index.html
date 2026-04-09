@@ -5,38 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hero Hangouts | DC Universe</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="icon" href="images/icon.png" type="image/png">
 </head>
 <body>
     <header>
         <img src="images/logo.png" alt="Logo" class="logo">
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="login.html" class="login-button">Login</a>
-            </nav>
+        <nav>
+            <a href="index.html">Home</a>
+            <!-- Guidelines: login link must have id="login-link" to be shown/hidden by JS -->
+            <a href="login.html" id="login-link" class="login-button">Login</a>
+        </nav>
     </header>
 
     <main>
         <section id="filter">
             <label for="price-filter">Max Credits per Night:</label>
+            <!-- Guidelines: options must be 10, 50, 100, All -->
             <select id="price-filter">
+                <option value="10">10 Credits</option>
+                <option value="50">50 Credits</option>
                 <option value="100">100 Credits</option>
-                <option value="500">500 Credits</option>
+                <option value="all">All</option>
             </select>
         </section>
 
         <section id="places-list">
-            <article class="place-card">
-                <h3>The Batcave</h3>
-                <p>Price: 500 Credits/Night</p>
-                <a href="place.html" class="details-button">View Details</a>
-            </article>
-            
-            <article class="place-card">
-                <h3>Fortress of Solitude</h3>
-                <p>Price: 0 Credits/Night (Kryptonians only)</p>
-                <a href="place.html" class="details-button">View Details</a>
-            </article>
+            <!-- Populated dynamically by JS -->
         </section>
     </main>
 

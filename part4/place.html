@@ -5,42 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Place Details | DC Universe</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
     <header>
         <img src="images/logo.png" alt="Logo" class="logo">
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="login.html" class="login-button">Login</a>
-            </nav>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html" id="login-link" class="login-button">Login</a>
+        </nav>
     </header>
 
     <main>
-        <section class="place-details">
-            <h1>The Batcave</h1>
-            <div class="place-info">
-                <p><strong>Host:</strong> Bruce Wayne</p>
-                <p><strong>Price:</strong> 500 Credits</p>
-                <p><strong>Description:</strong> High-tech subterranean facility with advanced computing and forensic labs.</p>
-                <p><strong>Amenities:</strong> Supercomputer, Batmobile Parking, Training Room.</p>
-                <ul class="amenities-list">
-                    <li><img src="images/icon_wifi.png" alt="WiFi" class="amenity-icon"> WayneTech Gigabit WiFi</li>
-                    <li><img src="images/icon_bed.png" alt="Bed" class="amenity-icon"> 1 King-Sized Bat-Pod Bed</li>
-                    <li><img src="images/icon_bath.png" alt="Bath" class="amenity-icon"> 1 Decontamination Bath</li>
-                </ul>
-            </div>
+        <!-- Guidelines: id="place-details", classes place-details + place-info used by CSS -->
+        <section id="place-details" class="place-details">
+            <h1>Loading Place Details...</h1>
         </section>
 
-        <section id="reviews">
+        <section id="reviews-list">
             <h2>Reviews from the League</h2>
-            <article class="review-card">
-                <p><strong>Diana Prince:</strong> A bit damp, but excellent security.</p>
-                <p>Rating: 4/5</p>
-            </article>
+            <!-- Review cards injected dynamically, each uses class="review-card" -->
         </section>
 
-        <section class="add-review">
-            <a href="add_review.html" class="details-button">Add a Review</a>
+        <!-- Guidelines: id="add-review", hidden by default, shown only if authenticated -->
+        <section id="add-review" style="display: none;">
+            <h2>Write a Review</h2>
+            <form id="review-form" class="form">
+                <label for="review">Your Review:</label>
+                <textarea id="review" rows="4" required></textarea>
+
+                <label for="rating">Rating (1-5):</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+                <button type="submit" class="details-button">Submit Review</button>
+            </form>
         </section>
     </main>
 
